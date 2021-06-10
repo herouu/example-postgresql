@@ -1,0 +1,7 @@
+[requires]
+oatpp/1.2.5
+oatpp-postgresql/1.2.0
+oatpp-swagger/1.2.0
+
+[generators]
+cmake

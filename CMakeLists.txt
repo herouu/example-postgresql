@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(${project_name}-lib
         src/controller/UserController.hpp
+        src/controller/RoleController.hpp
         src/db/UserDb.hpp
         src/dto/ConfigDto.hpp
         src/dto/PageDto.hpp
@@ -21,26 +22,30 @@ add_library(${project_name}-lib
         src/ErrorHandler.hpp
         src/ServiceComponent.hpp
         src/SwaggerComponent.hpp
-)
+        src/db/RoleDb.hpp
+        src/dto/RoleDto.hpp
+        src/service/RoleService.cpp
+        src/service/RoleService.hpp
+        )
 
 target_include_directories(${project_name}-lib PUBLIC src)
-
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 ## link libs
 
-find_package(oatpp              1.2.5 REQUIRED)
-find_package(oatpp-swagger      1.2.5 REQUIRED)
-find_package(oatpp-postgresql   1.2.5 REQUIRED)
-
-target_link_libraries(${project_name}-lib
-        PUBLIC oatpp::oatpp
-        PUBLIC oatpp::oatpp-test
-        PUBLIC oatpp::oatpp-swagger
-        PUBLIC oatpp::oatpp-postgresql
-)
+#find_package(oatpp              1.2.5 REQUIRED)
+#find_package(oatpp-postgresql   1.2.5 REQUIRED)
+#
+#target_link_libraries(${project_name}-lib
+#        PUBLIC oatpp::oatpp
+#        PUBLIC oatpp::oatpp-test
+#        PUBLIC oatpp::oatpp-swagger
+#        PUBLIC oatpp::oatpp-postgresql
+#)
 
 add_definitions(
         # Path to swagger-ui resources #
-        -DOATPP_SWAGGER_RES_PATH="${oatpp-swagger_INCLUDE_DIRS}/../bin/oatpp-swagger/res"
+        -DOATPP_SWAGGER_RES_PATH="${CMAKE_CURRENT_LIST_DIR}/oatpp-swagger/res"
 
         # Path to config file #
         -DCONFIG_PATH="${CMAKE_CURRENT_LIST_DIR}/resources/config.json"
@@ -53,16 +58,15 @@ add_definitions(
 ## add executables
 
 add_executable(${project_name}-exe
-        src/App.cpp
-)
-target_link_libraries(${project_name}-exe ${project_name}-lib)
-add_dependencies(${project_name}-exe ${project_name}-lib)
-
-add_executable(${project_name}-test
-        test/tests.cpp
-)
-target_link_libraries(${project_name}-test ${project_name}-lib)
-add_dependencies(${project_name}-test ${project_name}-lib)
-
-enable_testing()
-add_test(project-tests ${project_name}-test)
+        src/App.cpp src/controller/Statistic.hpp)
+target_link_libraries(${project_name}-exe ${project_name}-lib ${CONAN_LIBS})
+#add_dependencies(${project_name}-exe ${project_name}-lib)
+#
+#add_executable(${project_name}-test
+#        test/tests.cpp
+#)
+#target_link_libraries(${project_name}-test ${project_name}-lib)
+#add_dependencies(${project_name}-test ${project_name}-lib)
+#
+#enable_testing()
+#add_test(project-tests ${project_name}-test)

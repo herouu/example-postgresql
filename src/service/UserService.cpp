@@ -67,3 +67,7 @@ oatpp::Object<StatusDto> UserService::deleteUserById(const oatpp::String& userId
   status->message = "User was successfully deleted";
   return status;
 }
+
+oatpp::Object<StatusDto> UserService::test(const oatpp::String &id) {
+    return oatpp::Object<StatusDto>();
+}

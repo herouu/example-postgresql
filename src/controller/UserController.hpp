@@ -108,6 +108,21 @@ public:
     return createDtoResponse(Status::CODE_200, m_userService.deleteUserById(userId));
   }
 
+
+    ENDPOINT_INFO(test) {
+        info->summary = "测试";
+
+        info->addResponse<Object<StatusDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+
+        info->pathParams["userId"].description = "User Identifier";
+    }
+    ENDPOINT("DELETE", "test", test,
+             PATH(String, userId))
+    {
+        return createDtoResponse(Status::CODE_200, m_userService.deleteUserById(userId));
+    }
+
 };
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<- End Codegen

@@ -3,7 +3,7 @@
     "host": "0.0.0.0",
     "port": 8000,
     "swaggerHost": "localhost:8000",
-    "dbConnectionString": "postgresql://postgres:db-pass@localhost:5432/postgres"
+    "dbConnectionString": "postgresql://herouu:herouu@101.200.79.90:5432/herouu"
   },
   "local-docker": {
     "host": "0.0.0.0",

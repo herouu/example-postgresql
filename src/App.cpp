@@ -10,45 +10,54 @@
 #include "oatpp/network/Server.hpp"
 
 #include <iostream>
+#include <controller/RoleController.hpp>
+#include <controller/Statistic.hpp>
 
-void run(const oatpp::base::CommandLineArguments& args) {
+void run(const oatpp::base::CommandLineArguments &args) {
 
-  AppComponent appComponent(args);
-  ServiceComponent serviceComponent;
-  SwaggerComponent swaggerComponent;
-  DatabaseComponent databaseComponent;
+    AppComponent appComponent(args);
+    ServiceComponent serviceComponent;
+    SwaggerComponent swaggerComponent;
+    DatabaseComponent databaseComponent;
 
-  /* create ApiControllers and add endpoints to router */
+    /* create ApiControllers and add endpoints to router */
 
-  auto router = serviceComponent.httpRouter.getObject();
-  auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
+    auto router = serviceComponent.httpRouter.getObject();
+    auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
 
-  auto userController = UserController::createShared();
-  userController->addEndpointsToRouter(router);
+    auto userController = UserController::createShared();
+    userController->addEndpointsToRouter(router);
 
-  docEndpoints->pushBackAll(userController->getEndpoints()); // Add userController to swagger
+    auto roleController = RoleController::createShared();
+    roleController->addEndpointsToRouter(router);
+    docEndpoints->pushBackAll(userController->getEndpoints()); // Add userController to swagger
+    docEndpoints->pushBackAll(roleController->getEndpoints()); // Add userController to swagger
 
-  auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
-  swaggerController->addEndpointsToRouter(router);
+    auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
+    swaggerController->addEndpointsToRouter(router);
 
-  /* create server */
+    auto staticController = StaticController::createShared();
+    staticController->addEndpointsToRouter(router);
 
-  oatpp::network::Server server(serviceComponent.serverConnectionProvider.getObject(),
-                                serviceComponent.serverConnectionHandler.getObject());
+    /* create server */
 
-  OATPP_LOGD("Server", "Running on port %s...", serviceComponent.serverConnectionProvider.getObject()->getProperty("port").toString()->c_str());
+    oatpp::network::Server server(serviceComponent.serverConnectionProvider.getObject(),
+                                  serviceComponent.serverConnectionHandler.getObject());
 
-  server.run();
+    OATPP_LOGD("Server", "Running on port %s...",
+               serviceComponent.serverConnectionProvider.getObject()->getProperty("port").toString()->c_str());
+
+    server.run();
 
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
 
-  oatpp::base::Environment::init();
+    oatpp::base::Environment::init();
 
-  run(oatpp::base::CommandLineArguments(argc, argv));
+    run(oatpp::base::CommandLineArguments(argc, argv));
 
-  oatpp::base::Environment::destroy();
+    oatpp::base::Environment::destroy();
 
-  return 0;
+    return 0;
 }

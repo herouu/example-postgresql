@@ -21,6 +21,7 @@ public:
   oatpp::Object<UserDto> getUserById(const oatpp::String& id);
   oatpp::Object<PageDto<oatpp::Object<UserDto>>> getAllUsers(const oatpp::UInt32& offset, const oatpp::UInt32& limit);
   oatpp::Object<StatusDto> deleteUserById(const oatpp::String& id);
+  oatpp::Object<StatusDto> test(const oatpp::String& id);
 
 };
 
